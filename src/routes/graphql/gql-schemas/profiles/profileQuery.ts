@@ -1,6 +1,7 @@
-import { GraphQLList, GraphQLString } from "graphql";
+import { GraphQLList, GraphQLNonNull } from "graphql";
 import { PrismaClient, Profile } from "@prisma/client";
 import { ProfileObj } from "./profileObj.js";
+import { UUIDType } from "../../types/uuid.js";
 
 export const profilesQuery = {
   profiles: {
@@ -12,7 +13,7 @@ export const profilesQuery = {
   profile: {
     type: ProfileObj,
     args: {
-      id: {type: GraphQLString}
+      id: {type: new GraphQLNonNull(UUIDType)}
     },
     resolve: async (_, args: Profile, context: PrismaClient) => {
       return await context.profile.findUnique({

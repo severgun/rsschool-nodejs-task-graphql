@@ -1,5 +1,5 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
-import { MemberTypeObj } from "../member-types/memberTypeObj.js";
+import { GraphQLBoolean, GraphQLInt, GraphQLObjectType } from "graphql";
+import { MemberTypeIdEnum, MemberTypeObj } from "../member-types/memberTypeObj.js";
 import { UUIDType } from "../../types/uuid.js";
 import { PrismaClient, Profile } from "@prisma/client";
 
@@ -23,6 +23,6 @@ export const ProfileObj = new GraphQLObjectType({
         })
       }
     },
-    memberTypeId: { type: GraphQLString },
+    memberTypeId: { type: MemberTypeIdEnum },
   })
 })

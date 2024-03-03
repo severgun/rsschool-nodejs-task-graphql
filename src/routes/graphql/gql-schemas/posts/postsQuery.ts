@@ -1,4 +1,4 @@
-import { GraphQLList } from "graphql";
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { Post, PrismaClient } from "@prisma/client";
 import { PostObj } from "./postsObj.js";
 import { UUIDType } from "../../types/uuid.js";
@@ -11,9 +11,9 @@ export const postsQuery = {
     },
   },
   post: {
-    type: PostObj,
+    type: PostObj as GraphQLObjectType,
     args: {
-      id: {type: UUIDType}
+      id: {type: new GraphQLNonNull(UUIDType)}
     },
     resolve: async (_, args: Post, context: PrismaClient) => {
       return await context.post.findUnique({

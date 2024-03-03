@@ -1,5 +1,5 @@
-import { GraphQLList, GraphQLString } from "graphql";
-import { MemberTypeObj } from "./memberTypeObj.js";
+import { GraphQLList, GraphQLNonNull } from "graphql";
+import { MemberTypeIdEnum, MemberTypeObj } from "./memberTypeObj.js";
 import { MemberType, PrismaClient } from "@prisma/client";
 
 export const memberTypesQuery = {
@@ -12,7 +12,7 @@ export const memberTypesQuery = {
   memberType: {
     type: MemberTypeObj,
     args: {
-      id: {type: GraphQLString}
+      id: {type: new GraphQLNonNull(MemberTypeIdEnum)}
     },
     resolve: async (_, args: MemberType, context: PrismaClient) => {
       return await context.memberType.findUnique({
