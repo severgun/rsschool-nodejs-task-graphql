@@ -2,7 +2,7 @@ import { GraphQLList, GraphQLNonNull } from "graphql";
 import { MemberTypeIdEnum, MemberTypeObj } from "./memberTypeObj.js";
 import { MemberType, PrismaClient } from "@prisma/client";
 
-export const memberTypesQuery = {
+export const memberTypeQuery = {
   memberTypes: {
     type: new GraphQLList(MemberTypeObj),
     resolve: async (_source, _args, context: PrismaClient) => {

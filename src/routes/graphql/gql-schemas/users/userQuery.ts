@@ -1,9 +1,9 @@
 import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { PrismaClient, User } from "@prisma/client";
-import { UserObj } from "./usersObj.js";
+import { UserObj } from "./userObj.js";
 import { UUIDType } from "../../types/uuid.js";
 
-export const usersQuery = {
+export const userQuery = {
   users: {
     type: new GraphQLList(UserObj),
     resolve: async (_source, _args, context: PrismaClient) => {

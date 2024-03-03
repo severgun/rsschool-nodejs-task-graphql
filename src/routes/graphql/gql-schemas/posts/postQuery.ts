@@ -3,7 +3,7 @@ import { Post, PrismaClient } from "@prisma/client";
 import { PostObj } from "./postObj.js";
 import { UUIDType } from "../../types/uuid.js";
 
-export const postsQuery = {
+export const postQuery = {
   posts: {
     type: new GraphQLList(PostObj),
     resolve: async (_source, _args, context: PrismaClient) => {

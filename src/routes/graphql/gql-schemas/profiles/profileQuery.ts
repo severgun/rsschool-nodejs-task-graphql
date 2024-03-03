@@ -3,7 +3,7 @@ import { PrismaClient, Profile } from "@prisma/client";
 import { ProfileObj } from "./profileObj.js";
 import { UUIDType } from "../../types/uuid.js";
 
-export const profilesQuery = {
+export const profileQuery = {
   profiles: {
     type: new GraphQLList(ProfileObj),
     resolve: async (_source, _args, context: PrismaClient) => {
