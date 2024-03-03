@@ -26,7 +26,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
       if (validationErrors.length > 0) {
         return {
           data: {},
-          errors: {validationErrors},
+          errors: validationErrors,
         }
       }
       
