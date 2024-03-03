@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull } from "graphql";
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { PrismaClient, Profile } from "@prisma/client";
 import { ProfileObj } from "./profileObj.js";
 import { UUIDType } from "../../types/uuid.js";
@@ -11,7 +11,7 @@ export const profilesQuery = {
     },
   },
   profile: {
-    type: ProfileObj,
+    type: ProfileObj as GraphQLObjectType,
     args: {
       id: {type: new GraphQLNonNull(UUIDType)}
     },

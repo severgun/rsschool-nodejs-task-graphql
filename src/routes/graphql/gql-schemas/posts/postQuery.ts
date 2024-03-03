@@ -1,6 +1,6 @@
 import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { Post, PrismaClient } from "@prisma/client";
-import { PostObj } from "./postsObj.js";
+import { PostObj } from "./postObj.js";
 import { UUIDType } from "../../types/uuid.js";
 
 export const postsQuery = {
