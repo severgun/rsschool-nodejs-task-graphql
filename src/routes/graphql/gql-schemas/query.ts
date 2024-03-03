@@ -4,6 +4,7 @@ import { profileQuery } from "./profiles/profileQuery.js";
 import { postQuery } from "./posts/postQuery.js";
 import { userQuery } from "./users/userQuery.js";
 import { postMutation } from "./posts/postMutation.js";
+import { userMutation } from "./users/userMutation.js";
 
 const queryTypes = new GraphQLObjectType({
   name: "Query",
@@ -19,6 +20,7 @@ const mutationTypes = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     ...postMutation,
+    ...userMutation,
   }),
 });
   
