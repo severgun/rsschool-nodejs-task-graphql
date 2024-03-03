@@ -11,7 +11,7 @@ export const UserObj = new GraphQLObjectType({
     name: { type: GraphQLString },
     balance: { type: GraphQLFloat },
     profile: { 
-      type: ProfileObj,
+      type: ProfileObj as GraphQLObjectType,
       resolve: async (source: User, _, context: PrismaClient) => {
         return await context.profile.findUnique({
           where: {
