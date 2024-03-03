@@ -13,19 +13,31 @@ interface PostArgsType {
 }
 
 const CreatePostInputType = new GraphQLInputObjectType({
-    name: 'CreatePostInput',
-    fields: () => ({
-      title: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      content: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      authorId: {
-        type: new GraphQLNonNull(UUIDType),
-      },
-    }),
-  });
+  name: 'CreatePostInput',
+  fields: () => ({
+    title: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    content: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    authorId: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+  }),
+});
+
+const ChangePostInputType = new GraphQLInputObjectType({
+  name: 'ChangePostInput',
+  fields: () => ({
+    title: {
+      type: GraphQLString,
+    },
+    content: {
+      type: GraphQLString,
+    },
+  }),
+});
 
 export const postMutation = {
   createPost : {
@@ -36,7 +48,9 @@ export const postMutation = {
       }
     },
     resolve: async (_source, args: Pick<PostArgsType, 'dto'>, context: PrismaClient) => {
-      return await context.post.create({data: args.dto});
+      const {dto} = args;
+      
+      return await context.post.create({data: dto});
     }
   },
   changePost: {
@@ -46,15 +60,17 @@ export const postMutation = {
         type: new GraphQLNonNull(UUIDType),
       },
       dto: {
-        type: new GraphQLNonNull(CreatePostInputType),
+        type: new GraphQLNonNull(ChangePostInputType),
       },
     },
     resolve: async (_source, args: PostArgsType, context: PrismaClient) => {
+      const {id, dto} = args;
+      
       return await context.post.update({
         where: {
-          id: args.id,
+          id,
         },
-        data: args.dto,
+        data: dto,
       });
     },
   },
@@ -66,11 +82,14 @@ export const postMutation = {
       }
     },
     resolve: async (_source, args: Pick<PostArgsType, 'id'>, context: PrismaClient) => {
+      const {id} = args;
+      
       await context.post.delete({
         where: {
-          id: args.id
+          id
         }
-      })
+      });
+
       return true;
     }
   }

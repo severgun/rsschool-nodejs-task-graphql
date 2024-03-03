@@ -16,9 +16,11 @@ export const userQuery = {
       id: {type: new GraphQLNonNull(UUIDType)}
     },
     resolve: async (_, args: User, context: PrismaClient) => {
+      const {id} = args;
+      
       return await context.user.findUnique({
         where: {
-          id: args.id,
+          id,
         }
       })
     },

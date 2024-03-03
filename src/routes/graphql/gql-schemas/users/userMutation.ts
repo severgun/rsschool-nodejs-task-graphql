@@ -11,6 +11,11 @@ interface UserArgsType {
   }
 }
 
+interface UserSubscribeArgsType {
+  userId: string;
+  authorId: string;
+}
+
 const CreateUserInputType = new GraphQLInputObjectType({
   name: 'CreateUserInput',
   fields: () => ({
@@ -19,6 +24,18 @@ const CreateUserInputType = new GraphQLInputObjectType({
     },
     balance: {
       type: new GraphQLNonNull(GraphQLFloat),
+    },
+  })
+});
+
+const ChangeUserInputType = new GraphQLInputObjectType({
+  name: 'ChangeUserInput',
+  fields: () => ({
+    name: {
+      type: GraphQLString,
+    },
+    balance: {
+      type: GraphQLFloat,
     },
   })
 });
@@ -32,7 +49,9 @@ export const userMutation = {
       }
     },
     resolve: async (_source, args: Pick<UserArgsType, 'dto'>, context: PrismaClient) => {
-      return await context.user.create({data: args.dto});
+      const {dto} = args;
+
+      return await context.user.create({data: dto});
     }
   },
   changeUser: {
@@ -42,15 +61,17 @@ export const userMutation = {
         type: new GraphQLNonNull(UUIDType),
       },
       dto: {
-        type: new GraphQLNonNull(CreateUserInputType),
+        type: new GraphQLNonNull(ChangeUserInputType),
       },
     },
     resolve: async (_source, args: UserArgsType, context: PrismaClient) => {
+      const {id, dto} = args;
+
       return await context.user.update({
         where: {
-          id: args.id,
+          id,
         },
-        data: args.dto,
+        data: dto,
       });
     },
   },
@@ -62,12 +83,62 @@ export const userMutation = {
       }
     },
     resolve: async (_source, args: Pick<UserArgsType, 'id'>, context: PrismaClient) => {
+      const {id} = args;
+
       await context.user.delete({
         where: {
-          id: args.id
+          id
         }
       })
       return true;
     }
+  },
+  subscribeTo: {
+    type: UserObj as GraphQLObjectType,
+    args: {
+      userId: {
+        type: new GraphQLNonNull(UUIDType),
+      },
+      authorId: {
+        type: new GraphQLNonNull(UUIDType),
+      },
+    },
+    resolve: async (_source, args: UserSubscribeArgsType, context: PrismaClient) => {
+      const {userId, authorId} = args;
+
+      return await context.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          userSubscribedTo: {
+            create: {
+              authorId,
+            },
+          },
+        },
+      });
+    },
+  },
+  unsubscribeFrom: {
+    type: GraphQLBoolean,
+    args: {
+      userId: { type: new GraphQLNonNull(UUIDType) },
+      authorId: { type: new GraphQLNonNull(UUIDType) },
+    },
+    resolve: async (_source, args: UserSubscribeArgsType, context: PrismaClient) => {
+      const {userId, authorId} = args;
+
+      await context.subscribersOnAuthors.delete({
+        where: {
+          subscriberId_authorId: {
+            subscriberId: userId,
+            authorId,
+          },
+        },
+      });
+
+      return true;
+    },
   },
 };
