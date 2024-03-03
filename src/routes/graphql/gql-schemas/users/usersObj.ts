@@ -30,7 +30,33 @@ export const UserObj = new GraphQLObjectType({
         })
       }
     },
-    // userSubscribedTo: {},
-    // subscribedToUser: {},
+    userSubscribedTo: {
+      type: new GraphQLList(UserObj),
+      resolve: async (source, args, context) => {
+        return await context.user.findMany({
+          where: {
+            subscribedToUser: {
+              some: {
+                subscriberId: source.id,
+              },
+            },
+          },
+        })
+      }
+    },
+    subscribedToUser: {
+      type: new GraphQLList(UserObj),
+      resolve: async (source, args, context) => {
+        return await context.user.findMany({
+          where: {
+            userSubscribedTo: {
+              some: {
+                authorId: source.id,
+              },
+            },
+          },
+        })
+      }
+    },
   })
 })
